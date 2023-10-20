@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Édition de Tâche</title>
+</head>
+<body>
+<h1>Édition de Tâche</h1>
+<form id="editTaskForm">
+    <label for="titre">Titre :</label>
+    <input type="text" id="titre" name="titre" required><br><br>
+
+    <label for="dateEcheance">Date d'échéance :</label>
+    <input type="date" id="dateEcheance" name="dateEcheance"><br><br>
+
+    <label for="categorie">Catégorie :</label>
+    <select id="categorie" name="categorie">
+        <option value="Catégorie 1">Catégorie 1</option>
+        <option value="Catégorie 2">Catégorie 2</option>
+        <option value="Catégorie 3">Catégorie 3</option>
+    </select><br><br>
+
+    <input type="submit" value="Enregistrer">
+</form>
+
+<script>
+    // Extraire les paramètres d'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const titre = urlParams.get('titre');
+    const dateEcheance = urlParams.get('dateEcheance');
+    const categorie = urlParams.get('categorie');
+
+    // Pré-remplir le formulaire avec les données extraites
+    document.getElementById('titre').value = decodeURIComponent(titre);
+    document.getElementById('dateEcheance').value = dateEcheance;
+    document.getElementById('categorie').value = decodeURIComponent(categorie);
+
+    // Écouter l'événement de soumission du formulaire
+    document.getElementById('editTaskForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Récupérer les valeurs du formulaire et faire quelque chose avec elles
+        var titre = document.getElementById('titre').value;
+        var dateEcheance = document.getElementById('dateEcheance').value;
+        var categorie = document.getElementById('categorie').value;
+
+        // Faites quelque chose avec les données (par exemple, les envoyer à un serveur via une requête AJAX)
+        // Vous pouvez ajouter ici la logique pour enregistrer les modifications
+
+        // Exemple d'affichage des données (remplacez par votre propre logique)
+        console.log('Titre : ' + titre);
+        console.log('Date d\'échéance : ' + dateEcheance);
+        console.log('Catégorie : ' + categorie);
+    });
+</script>
+</body>
+</html>

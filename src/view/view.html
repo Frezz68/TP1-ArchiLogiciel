@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau avec filtre</title>
+    <style>
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        select {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+
+<h1>Gestionnaire de tâches</h1>
+
+<form id="task-form">
+    <label for="task-title">Titre de la tâche:</label>
+    <input type="text" id="task-title" required><br>
+
+    <label for="task-description">Description:</label>
+    <textarea id="task-description"></textarea><br>
+
+    <label for="task-due-date">Date d'échéance:</label>
+    <input type="date" id="task-due-date"><br>
+
+    <label for="task-category">Catégorie:</label>
+    <select id="task-category">
+        <option value="Travail">Travail</option>
+        <option value="Personnel">Personnel</option>
+        <option value="Études">Études</option>
+        <option value="Autre">Autre</option>
+    </select><br>
+
+    <button type="submit">Ajouter une tâche</button>
+</form>
+
+
+<h1>Tableau avec filtre</h1>
+
+<!-- Zone de filtre -->
+<label for="categorie">Filtrer par catégorie :</label>
+<select id="categorie">
+    <option value="Toutes">Toutes</option>
+    <option value="Catégorie 1">Catégorie 1</option>
+    <option value="Catégorie 2">Catégorie 2</option>
+    <option value="Catégorie 3">Catégorie 3</option>
+</select>
+
+
+<label for="dynamic-select">Sélectionnez une option :</label>
+<select id="dynamic-select">
+    <option value="">Sélectionnez une option</option>
+</select>
+
+<!-- Tableau de données -->
+<table id="tableau">
+    <thead>
+    <tr>
+        <th>Titre</th>
+        <th>Date d'échéance</th>
+        <th>Catégorie</th>
+    </tr>
+    </thead>
+    <tbody id="tableau-body">
+    <!-- Les lignes du tableau seront générées ici -->
+    </tbody>
+</table>
+
+<script>
+    const taches = [
+    { titre: 'Test', dateEcheance: '2023-10-25', categorie: 'Catégorie 1' },
+    { titre: 'Tâche 2', dateEcheance: '2023-11-15', categorie: 'Catégorie 245654' },
+    { titre: 'Tâche 3', dateEcheance: '2023-10-30', categorie: 'Catégorie 1' },
+    { titre: 'Tâche 4', dateEcheance: '2023-11-10', categorie: 'Catégorie 3' },
+    ];
+
+    const tableauBody = document.getElementById('tableau-body');
+    const categories = [];
+
+    // Boucle à travers les tâches et crée des lignes pour chaque tâche
+    for (let i = 0; i < taches.length; i++) {
+        const item = taches[i];
+        //Ajoute la catégorie dans une liste si elle n'y est pas déjà
+        if (!categories.includes(item.categorie)) {
+            categories.push(item.categorie);
+        }
+        console.log(categories);
+
+        const row = document.createElement('tr');
+        const titreCell = document.createElement('td');
+        const dateEcheanceCell = document.createElement('td');
+        const categorieCell = document.createElement('td');
+
+        titreCell.textContent = item.titre;
+        dateEcheanceCell.textContent = item.dateEcheance;
+        categorieCell.textContent = item.categorie;
+
+        row.appendChild(titreCell);
+        row.appendChild(dateEcheanceCell);
+        row.appendChild(categorieCell);
+
+        tableauBody.appendChild(row);
+    }
+
+    // Fonction pour filtrer le tableau en fonction de la catégorie sélectionnée
+    document.getElementById('categorie').addEventListener('change', function() {
+        var selectedCategory = this.value;
+        var rows = document.getElementById('tableau').querySelectorAll('tbody tr');
+
+        rows.forEach(function(row) {
+            var category = row.querySelector('td:nth-child(3)').textContent;
+
+            if (selectedCategory === 'Toutes' || selectedCategory === category) {
+                row.style.display = 'table-row';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+
+    // Gérer la soumission du formulaire pour ajouter une tâche
+    const taskForm = document.getElementById("task-form");
+    const taskList = document.getElementById("task-list");
+
+    taskForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        // Récupérer les valeurs du formulaire
+        const title = document.getElementById("task-title").value;
+        const description = document.getElementById("task-description").value;
+        const dueDate = document.getElementById("task-due-date").value;
+        const category = document.getElementById("task-category").value;
+
+        // Créer un nouvel élément de liste pour la tâche
+        const taskItem = document.createElement("li");
+        taskItem.innerHTML = `<strong>${title}</strong><br>${description}<br>Date d'échéance: ${dueDate}<br>Catégorie: ${category}`;
+
+        // Ajouter la tâche à la liste
+        taskList.appendChild(taskItem);
+
+        // Réinitialiser le formulaire
+        taskForm.reset();
+    });
+
+    const selectElement = document.getElementById("dynamic-select");
+
+    // Parcourez le tableau de données et ajoutez chaque élément comme une option au select
+    categories.forEach(function(optionText) {
+        const option = document.createElement("option");
+        option.value = optionText;
+        option.textContent = optionText;
+        selectElement.appendChild(option);
+    });
+</script>
+</body>
+</html>
