@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import {createConnection, getRepository} from "typeorm";
 import express from "express";
+import cors from 'cors';
 import * as bodyParser from "body-parser";
 import { Tache } from "./Tache";
 import {Categorie} from "./Categorie";
@@ -18,6 +19,7 @@ createConnection({
 }).then(async (connection) => {
   const app = express();
   app.use(bodyParser.json());
+  app.use(cors());
 
   // Create a new task
   app.post("/tache", async (req, res) => {
