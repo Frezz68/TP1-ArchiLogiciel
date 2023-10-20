@@ -19,17 +19,18 @@ fetch("http://localhost:3000/tache")
             const categories = [];
 
             //Ajoute la catégorie dans une liste si elle n'y est pas déjà
-            if (!categories.includes(item.categorie.libelleCategorie)) {
-                categories.push(item.categorie.libelleCategorie);
+            if (!categories.includes(item.categorie.idCategorie)) {
+                categories.push(item.categorie);
             }
             console.log(categories);
 
             categories.forEach(function(optionText) {
                 const option = document.createElement("option");
-                option.value = optionText;
-                option.textContent = optionText;
+                option.value = optionText.idCategorie;
+                option.textContent = optionText.libelleCategorie;
                 selectElement.appendChild(option);
             });
+
             const row = document.createElement('tr');
             const titreCell = document.createElement('td');
             const dateEcheanceCell = document.createElement('td');
@@ -58,23 +59,31 @@ fetch("http://localhost:3000/tache")
 
 // Gérer la soumission du formulaire pour ajouter une tâche
 const taskForm = document.getElementById("task-form");
-const taskList = document.getElementById("task-list");
 
 taskForm.addEventListener("submit", function(event) {
     event.preventDefault();
 
-    // Récupérer les valeurs du formulaire
-    const title = document.getElementById("task-title").value;
-    const description = document.getElementById("task-description").value;
-    const dueDate = document.getElementById("task-due-date").value;
-    const category = document.getElementById("task-category").value;
+    console.log("test create", document.getElementById("dynamic-select").value);
+    console.log(document.getElementById("task-title").value);
+    const tache = {
+        titreTache: document.getElementById("task-title").value,
+        description: document.getElementById("task-description").value,
+        dateEcheance: document.getElementById("task-due-date").value,
+        categorie: document.getElementById("dynamic-select").value
+    }
 
-    // Créer un nouvel élément de liste pour la tâche
-    const taskItem = document.createElement("li");
-    taskItem.innerHTML = `<strong>${title}</strong><br>${description}<br>Date d'échéance: ${dueDate}<br>Catégorie: ${category}`;
-
-    // Ajouter la tâche à la liste
-    taskList.appendChild(taskItem);
+    fetch('http://localhost:3000/tache', {
+        method: 'POST',
+        body: tache,
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Traiter la réponse de l'API ici
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Erreur : ', error);
+        });
 
     // Réinitialiser le formulaire
     taskForm.reset();
